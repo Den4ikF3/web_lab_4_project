@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Ремонти</title>
+    <h:outputStylesheet name="css/style.css"/>
+</h:head>
+<h:body>
+    <ui:include src="/WEB-INF/menu.xhtml"/>
+    <div class="content">
+        <h1>Ремонти</h1>
+        <h:messages styleClass="msg" infoClass="info" errorClass="error" layout="list"/>
+
+        <h:form id="repairForm">
+            <h2>#{repairBean.repair.id == null ? 'Новий ремонт' : 'Редагування ремонту'}</h2>
+            <h:panelGrid columns="2" styleClass="form">
+                <h:outputLabel for="car" value="Автомобіль:"/>
+                <h:selectOneMenu id="car" value="#{repairBean.repair.carId}" required="true"
+                                 requiredMessage="Оберіть автомобіль">
+                    <f:selectItem itemLabel="— оберіть —" itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems value="#{repairBean.cars}" var="c" itemValue="#{c.id}"
+                                   itemLabel="#{c.plate} — #{c.brand} #{c.model}"/>
+                </h:selectOneMenu>
+                <h:outputLabel for="description" value="Опис робіт:"/>
+                <h:inputText id="description" value="#{repairBean.repair.description}" required="true"
+                             requiredMessage="Вкажіть опис робіт" maxlength="200" size="40"/>
+                <h:outputLabel for="price" value="Вартість, грн:"/>
+                <h:inputText id="price" value="#{repairBean.repair.price}" required="true"
+                             requiredMessage="Вкажіть вартість"
+                             converterMessage="Вартість має бути числом (наприклад, 1200.50)"/>
+                <h:outputLabel for="date" value="Дата (рррр-мм-дд):"/>
+                <h:inputText id="date" value="#{repairBean.repair.repairDate}" required="true"
+                             requiredMessage="Вкажіть дату"
+                             converterMessage="Дата має бути у форматі рррр-мм-дд">
+                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                </h:inputText>
+                <h:outputLabel for="status" value="Статус:"/>
+                <h:selectOneMenu id="status" value="#{repairBean.repair.status}">
+                    <f:selectItem itemValue="Нове" itemLabel="Нове"/>
+                    <f:selectItem itemValue="В роботі" itemLabel="В роботі"/>
+                    <f:selectItem itemValue="Виконано" itemLabel="Виконано"/>
+                </h:selectOneMenu>
+            </h:panelGrid>
+            <h:commandButton value="#{repairBean.repair.id == null ? 'Додати' : 'Зберегти'}" action="#{repairBean.save}"/>
+            <h:commandButton value="Скасувати" action="#{repairBean.cancel}" immediate="true"
+                             rendered="#{repairBean.repair.id != null}"/>
+        </h:form>
+
+        <h:form id="listForm">
+            <h2>Список ремонтів</h2>
+            <h:dataTable value="#{repairBean.repairs}" var="r" styleClass="grid">
+                <h:column><f:facet name="header">ID</f:facet>#{r.id}</h:column>
+                <h:column><f:facet name="header">Автомобіль</f:facet>#{r.carPlate}</h:column>
+                <h:column><f:facet name="header">Опис робіт</f:facet>#{r.description}</h:column>
+                <h:column><f:facet name="header">Вартість, грн</f:facet>#{r.price}</h:column>
+                <h:column>
+                    <f:facet name="header">Дата</f:facet>
+                    <h:outputText value="#{r.repairDate}">
+                        <f:convertDateTime type="localDate" pattern="dd.MM.yyyy"/>
+                    </h:outputText>
+                </h:column>
+                <h:column><f:facet name="header">Статус</f:facet>#{r.status}</h:column>
+                <h:column>
+                    <f:facet name="header">Дії</f:facet>
+                    <h:commandButton value="Редагувати" action="#{repairBean.edit(r)}"/>
+                    <h:commandButton value="Видалити" action="#{repairBean.delete(r)}"
+                                     onclick="return confirm('Видалити ремонт №#{r.id}?');"/>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </div>
+</h:body>
+</html>

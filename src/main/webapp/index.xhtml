@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>СТО</title>
+    <h:outputStylesheet name="css/style.css"/>
+</h:head>
+<h:body>
+    <ui:include src="/WEB-INF/menu.xhtml"/>
+    <div class="content">
+        <h1>СТО «АвтоМайстер»</h1>
+        <p>Веб-застосунок для роботи з базою даних станції технічного обслуговування (JSF + PostgreSQL).</p>
+        <ul>
+            <li><h:link outcome="cars" value="Автомобілі"/> — перегляд, додавання, редагування та видалення автомобілів</li>
+            <li><h:link outcome="repairs" value="Ремонти"/> — облік виконаних і запланованих робіт</li>
+            <li><h:link outcome="query" value="Запити до БД"/> — виконання SELECT-запитів з виведенням результатів</li>
+        </ul>
+    </div>
+</h:body>
+</html>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Автомобілі</title>
+    <h:outputStylesheet name="css/style.css"/>
+</h:head>
+<h:body>
+    <ui:include src="/WEB-INF/menu.xhtml"/>
+    <div class="content">
+        <h1>Автомобілі</h1>
+        <h:messages styleClass="msg" infoClass="info" errorClass="error" layout="list"/>
+
+        <h:form id="carForm">
+            <h2>#{carBean.car.id == null ? 'Новий автомобіль' : 'Редагування автомобіля'}</h2>
+            <h:panelGrid columns="2" styleClass="form">
+                <h:outputLabel for="plate" value="Держномер:"/>
+                <h:inputText id="plate" value="#{carBean.car.plate}" required="true"
+                             requiredMessage="Вкажіть держномер" maxlength="15"/>
+                <h:outputLabel for="brand" value="Марка:"/>
+                <h:inputText id="brand" value="#{carBean.car.brand}" required="true"
+                             requiredMessage="Вкажіть марку" maxlength="50"/>
+                <h:outputLabel for="model" value="Модель:"/>
+                <h:inputText id="model" value="#{carBean.car.model}" required="true"
+                             requiredMessage="Вкажіть модель" maxlength="50"/>
+                <h:outputLabel for="year" value="Рік випуску:"/>
+                <h:inputText id="year" value="#{carBean.car.year}" required="true"
+                             requiredMessage="Вкажіть рік випуску"
+                             converterMessage="Рік має бути цілим числом"
+                             validatorMessage="Рік має бути від 1950 до 2100">
+                    <f:validateLongRange minimum="1950" maximum="2100"/>
+                </h:inputText>
+                <h:outputLabel for="owner" value="Власник:"/>
+                <h:inputText id="owner" value="#{carBean.car.ownerName}" required="true"
+                             requiredMessage="Вкажіть власника" maxlength="100"/>
+            </h:panelGrid>
+            <h:commandButton value="#{carBean.car.id == null ? 'Додати' : 'Зберегти'}" action="#{carBean.save}"/>
+            <h:commandButton value="Скасувати" action="#{carBean.cancel}" immediate="true"
+                             rendered="#{carBean.car.id != null}"/>
+        </h:form>
+
+        <h:form id="listForm">
+            <h2>Список автомобілів</h2>
+            <h:dataTable value="#{carBean.cars}" var="c" styleClass="grid">
+                <h:column><f:facet name="header">ID</f:facet>#{c.id}</h:column>
+                <h:column><f:facet name="header">Держномер</f:facet>#{c.plate}</h:column>
+                <h:column><f:facet name="header">Марка</f:facet>#{c.brand}</h:column>
+                <h:column><f:facet name="header">Модель</f:facet>#{c.model}</h:column>
+                <h:column><f:facet name="header">Рік</f:facet>#{c.year}</h:column>
+                <h:column><f:facet name="header">Власник</f:facet>#{c.ownerName}</h:column>
+                <h:column>
+                    <f:facet name="header">Дії</f:facet>
+                    <h:commandButton value="Редагувати" action="#{carBean.edit(c)}"/>
+                    <h:commandButton value="Видалити" action="#{carBean.delete(c)}"
+                                     onclick="return confirm('Видалити автомобіль #{c.plate} разом з усіма його ремонтами?');"/>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </div>
+</h:body>
+</html>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Запити до БД</title>
+    <h:outputStylesheet name="css/style.css"/>
+</h:head>
+<h:body>
+    <ui:include src="/WEB-INF/menu.xhtml"/>
+    <div class="content">
+        <h1>Запити до бази даних</h1>
+        <p>Введіть запит SELECT (дозволено лише читання) або оберіть готовий приклад.</p>
+        <h:messages styleClass="msg" infoClass="info" errorClass="error" layout="list"/>
+
+        <h:form id="queryForm">
+            <h:inputTextarea id="sql" value="#{queryBean.sql}" rows="6"/>
+            <p>
+                <h:commandButton value="Виконати" action="#{queryBean.run}"/>
+                <h:commandButton value="Приклад 1: незавершені ремонти" action="#{queryBean.useExample(0)}"/>
+                <h:commandButton value="Приклад 2: витрати по авто" action="#{queryBean.useExample(1)}"/>
+                <h:commandButton value="Приклад 3: старі авто" action="#{queryBean.useExample(2)}"/>
+            </p>
+        </h:form>
+
+        <h:panelGroup rendered="#{queryBean.executed}">
+            <h2>Результат (рядків: #{queryBean.rows.size()})</h2>
+            <table class="result">
+                <tr>
+                    <ui:repeat value="#{queryBean.columns}" var="col"><th>#{col}</th></ui:repeat>
+                </tr>
+                <ui:repeat value="#{queryBean.rows}" var="row">
+                    <tr>
+                        <ui:repeat value="#{row}" var="cell"><td>#{cell}</td></ui:repeat>
+                    </tr>
+                </ui:repeat>
+            </table>
+        </h:panelGroup>
+    </div>
+</h:body>
+</html>
